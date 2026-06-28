@@ -1,0 +1,13 @@
+*.db
+archery_engine.db
+*.pyc
+*.pyo
+__pycache__/
+.env
+.env.local
+*.log
+venv/
+.venv/
+env/
+.DS_Store
+.vscode/
