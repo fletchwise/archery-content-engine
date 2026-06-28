@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎯 Archery Content Engine</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo">🎯 <span>Archery Content Engine</span></div>
+    <nav>
+      <button class="nav-btn active" onclick="showTab('generate')">Generate</button>
+      <button class="nav-btn" onclick="showTab('history')">History</button>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ── GENERATE TAB ──────────────────────────── -->
+  <div id="tab-generate">
+    <div class="two-col">
+
+      <!-- LEFT: Input Form -->
+      <div class="panel">
+        <h2 class="panel-title">Match Details</h2>
+        <form id="matchForm" onsubmit="handleSubmit(event)">
+
+          <!-- EVENT -->
+          <fieldset class="form-section">
+            <legend>📅 Event</legend>
+            <div class="form-row">
+              <label>Event Name *
+                <input type="text" id="event_name" required
+                  placeholder="Hyundai Archery World Cup 2026 Stage 1">
+              </label>
+            </div>
+            <div class="form-row two">
+              <label>Location
+                <input type="text" id="event_location" placeholder="Medellin, Colombia">
+              </label>
+              <label>Date
+                <input type="date" id="event_date">
+              </label>
+            </div>
+            <div class="form-row two">
+              <label>Round
+                <select id="event_round">
+                  <option value="Gold Final">Gold Final</option>
+                  <option value="Bronze Final">Bronze Final</option>
+                  <option value="Semifinal">Semifinal</option>
+                  <option value="Quarterfinal">Quarterfinal</option>
+                  <option value="Elimination Round">Elimination Round</option>
+                  <option value="Qualification">Qualification</option>
+                </select>
+              </label>
+              <label>Discipline
+                <select id="event_discipline">
+                  <option value="Compound Men Individual">Compound Men Individual</option>
+                  <option value="Compound Women Individual">Compound Women Individual</option>
+                  <option value="Recurve Men Individual">Recurve Men Individual</option>
+                  <option value="Recurve Women Individual">Recurve Women Individual</option>
+                  <option value="Compound Mixed Team">Compound Mixed Team</option>
+                  <option value="Recurve Mixed Team">Recurve Mixed Team</option>
+                </select>
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- ATHLETES -->
+          <fieldset class="form-section">
+            <legend>🏹 Athletes</legend>
+            <div class="athletes-grid">
+              <div>
+                <p class="sub-label">Home Athlete 🇺🇸</p>
+                <div class="form-row">
+                  <label>Name *
+                    <input type="text" id="home_name" required placeholder="Brady Ellison">
+                  </label>
+                </div>
+                <div class="form-row two">
+                  <label>Country
+                    <input type="text" id="home_country" placeholder="USA">
+                  </label>
+                  <label>World Rank #
+                    <input type="number" id="home_rank" placeholder="2" min="1">
+                  </label>
+                </div>
+              </div>
+              <div>
+                <p class="sub-label">Opponent 🎯</p>
+                <div class="form-row">
+                  <label>Name *
+                    <input type="text" id="opp_name" required placeholder="Mike Schloesser">
+                  </label>
+                </div>
+                <div class="form-row two">
+                  <label>Country
+                    <input type="text" id="opp_country" placeholder="Netherlands">
+                  </label>
+                  <label>World Rank #
+                    <input type="number" id="opp_rank" placeholder="1" min="1">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- MATCH -->
+          <fieldset class="form-section">
+            <legend>🎯 Match Result</legend>
+            <div class="form-row two">
+              <label>Result *
+                <select id="match_result" required>
+                  <option value="win">Win (Home athlete won)</option>
+                  <option value="loss">Loss (Home athlete lost)</option>
+                </select>
+              </label>
+              <label>Perfect Ends
+                <input type="number" id="perfect_ends" placeholder="3" min="0" max="10">
+              </label>
+            </div>
+            <div class="form-row two">
+              <label>Home Score
+                <input type="number" id="score_home" placeholder="149" min="0">
+              </label>
+              <label>Opponent Score
+                <input type="number" id="score_opp" placeholder="148" min="0">
+              </label>
+            </div>
+            <div class="checkbox-row">
+              <label class="checkbox-label">
+                <input type="checkbox" id="deciding_arrow">
+                Deciding arrow moment
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="comeback" onchange="toggleComeback(this)">
+                Comeback story
+              </label>
+            </div>
+            <div id="comeback_field" class="form-row hidden">
+              <label>Comeback details
+                <input type="text" id="comeback_from"
+                  placeholder="was losing 80-82 at halfway">
+              </label>
+            </div>
+          </fieldset>
+
+          <!-- PLATFORM -->
+          <fieldset class="form-section">
+            <legend>📱 Platform & Content</legend>
+            <div class="platform-radio">
+              <label class="radio-card">
+                <input type="radio" name="platform" value="youtube" checked>
+                <span>▶ YouTube</span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="platform" value="facebook">
+                <span>f Facebook</span>
+              </label>
+            </div>
+            <div class="form-row two">
+              <label>Content Type
+                <select id="content_type">
+                  <option value="highlight">Highlight</option>
+                  <option value="recap">Full Recap</option>
+                  <option value="reaction">Reaction</option>
+                  <option value="interview">Interview</option>
+                </select>
+              </label>
+              <label>Duration (min)
+                <input type="number" id="duration" placeholder="8" min="1">
+              </label>
+            </div>
+            <label>Key Moments / Extra Notes
+              <textarea id="extra_notes" rows="3"
+                placeholder="Last arrow was a perfect 10 under wind pressure"></textarea>
+            </label>
+          </fieldset>
+
+          <button type="submit" class="btn-generate" id="submitBtn">
+            ⚡ Generate Content Package
+          </button>
+        </form>
+      </div>
+
+      <!-- RIGHT: Results Panel -->
+      <div class="panel results-panel">
+
+        <!-- Idle -->
+        <div id="state-idle" class="state-card">
+          <div class="idle-icon">🎯</div>
+          <h3>Ready to Generate</h3>
+          <p>Fill in the match details and click Generate to create your complete content package.</p>
+        </div>
+
+        <!-- Loading -->
+        <div id="state-loading" class="state-card hidden">
+          <h3>Running AI Pipeline</h3>
+          <p class="loading-sub">This takes 20–35 seconds. The 4-stage AI is working...</p>
+          <div class="stages-list">
+            <div class="stage-item active" id="stage-A">
+              <div class="stage-icon">⟳</div>
+              <div class="stage-info">
+                <span class="stage-name">Stage A · Analyzer</span>
+                <span class="stage-desc">Reading match data, finding emotional hooks...</span>
+              </div>
+            </div>
+            <div class="stage-item pending" id="stage-B">
+              <div class="stage-icon">○</div>
+              <div class="stage-info">
+                <span class="stage-name">Stage B · Hypothesis</span>
+                <span class="stage-desc">Generating 5 title variations...</span>
+              </div>
+            </div>
+            <div class="stage-item pending" id="stage-C">
+              <div class="stage-icon">○</div>
+              <div class="stage-info">
+                <span class="stage-name">Stage C · Verifier</span>
+                <span class="stage-desc">Scoring each title for CTR and US appeal...</span>
+              </div>
+            </div>
+            <div class="stage-item pending" id="stage-D">
+              <div class="stage-icon">○</div>
+              <div class="stage-info">
+                <span class="stage-name">Stage D · Synthesizer</span>
+                <span class="stage-desc">Building final content package...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error -->
+        <div id="state-error" class="state-card hidden">
+          <div class="idle-icon">⚠️</div>
+          <h3>Generation Failed</h3>
+          <p id="error-msg" class="error-text-inline">An error occurred.</p>
+          <button onclick="resetToIdle()" class="btn-retry">↩ Try Again</button>
+        </div>
+
+        <!-- Results -->
+        <div id="state-results" class="hidden">
+          <div class="results-header">
+            <h3>✅ Content Package Ready</h3>
+            <div class="results-meta">
+              <span class="meta-badge" id="meta-hook">Hook: —</span>
+              <span class="meta-badge" id="meta-score">Quality: —</span>
+              <span class="meta-badge" id="meta-time">—s</span>
+            </div>
+          </div>
+
+          <!-- Title -->
+          <div class="result-block">
+            <div class="result-label">
+              🏆 Title
+              <span class="winner-style" id="winner-style"></span>
+            </div>
+            <div class="result-content title-content" id="result-title"></div>
+            <button class="btn-copy" onclick="copyField('result-title', this)">Copy</button>
+          </div>
+
+          <!-- Caption -->
+          <div class="result-block">
+            <div class="result-label">📝 Caption</div>
+            <div class="result-content caption-content" id="result-caption"></div>
+            <button class="btn-copy" onclick="copyField('result-caption', this)">Copy</button>
+          </div>
+
+          <!-- Hashtags -->
+          <div class="result-block">
+            <div class="result-label">
+              # Hashtags (15)
+              <button class="btn-copy small" onclick="copyHashtags()">Copy All</button>
+            </div>
+            <div class="hashtags-wrap" id="result-hashtags"></div>
+          </div>
+
+          <!-- Post Time -->
+          <div class="result-block">
+            <div class="result-label">⏰ Best Post Time</div>
+            <div class="post-time-block" id="result-posttime"></div>
+          </div>
+
+          <!-- Thumbnail (YouTube only) -->
+          <div class="result-block" id="block-thumbnail">
+            <div class="result-label">🖼️ Thumbnail Text</div>
+            <div class="result-content" id="result-thumbnail"></div>
+            <button class="btn-copy" onclick="copyField('result-thumbnail', this)">Copy</button>
+          </div>
+
+          <!-- All 5 Titles -->
+          <div class="result-block">
+            <div class="result-label toggle-btn" onclick="toggleAllTitles()">
+              📊 All 5 Scored Titles
+              <span id="titles-toggle-icon">▼</span>
+            </div>
+            <div id="all-titles-wrap" class="hidden">
+              <table class="titles-table">
+                <thead>
+                  <tr><th>Style</th><th>Title</th><th>Score</th></tr>
+                </thead>
+                <tbody id="titles-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <button onclick="resetToIdle()" class="btn-new">↩ Generate New</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── HISTORY TAB ────────────────────────────── -->
+  <div id="tab-history" class="hidden">
+    <div class="panel">
+      <h2 class="panel-title">Generation History</h2>
+      <div id="history-list"><p class="muted-text">Loading...</p></div>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast" class="toast">Copied!</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
